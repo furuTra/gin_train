@@ -20,6 +20,16 @@ func (s Service) GetAll() ([]User, error) {
 	return u, nil
 }
 
+// ユーザー取得(Paginator)
+func (s Service) PaginateUser(p entity.Pagination) ([]User, error) {
+    db := db.GetDB()
+    var u []User
+    if err := db.Limit(p.Limit).Offset(p.Offset).Order("id " + p.Sort).Find(&u).Error; err != nil {
+        return nil, err
+    }
+    return u, nil
+}
+
 // idでユーザー取得
 func (s Service) GetByID(id string) (User, error) {
     db := db.GetDB()
