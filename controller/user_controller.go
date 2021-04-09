@@ -6,13 +6,13 @@ import (
 	"github.com/furuTra/gin_train/service"
 )
 
+
 type Controller struct{}
 
 // Index action: GET /users
 func (pc Controller) Index(c *gin.Context) {
     var s user.Service
-    page := s.GeneratePaginationFromRequest(c)
-    p, err := s.PaginateUser(page)
+    p, err := s.GetAll()
 
     if err != nil {
         c.AbortWithStatus(404)

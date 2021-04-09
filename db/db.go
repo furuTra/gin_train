@@ -43,6 +43,7 @@ func GetDB() *gorm.DB {
 }
 
 func CloseDB() {
+	// db := connectDB()
 	err = db.Close()
 	if err != nil {
 		panic(err.Error())
