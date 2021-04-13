@@ -21,13 +21,14 @@ func (s Service) GetAll() ([]User, error) {
 }
 
 // ユーザー取得(Paginator)
-func (s Service) PaginateUser(p entity.Pagination) ([]User, error) {
+func (s Service) PaginateUser(p entity.Pagination) ([]User, int64, error) {
     db := db.GetDB()
     var u []User
-    if err := db.Limit(p.Limit).Offset(p.Offset).Order("id " + p.Sort).Find(&u).Error; err != nil {
-        return nil, err
+    var count int64
+    if result := db.Limit(p.Limit).Offset(p.Offset).Order("id " + p.Sort).Find(&u).Count(&count); result.Error != nil {
+        return nil, count, result.Error
     }
-    return u, nil
+    return u, count, nil
 }
 
 // idでユーザー取得

@@ -12,13 +12,16 @@ type Controller struct{}
 func (pc Controller) Index(c *gin.Context) {
     var s user.Service
     page := s.GeneratePaginationFromRequest(c)
-    p, err := s.PaginateUser(page)
+    p, count, err := s.PaginateUser(page)
 
     if err != nil {
         c.AbortWithStatus(404)
         fmt.Println(err)
     } else {
-        c.JSON(200, p)
+        c.JSON(200, gin.H{
+            "User": p,
+            "Count": count,
+        })
     }
 }
 
