@@ -20,15 +20,25 @@ func (s Service) GetAll() ([]User, error) {
 	return u, nil
 }
 
-// ユーザー取得(Paginator)
-func (s Service) PaginateUser(p entity.Pagination) ([]User, int64, error) {
+// ユーザー数取得
+func (s Service) GetUserCount() (int64) {
     db := db.GetDB()
     var u []User
     var count int64
-    if result := db.Limit(p.Limit).Offset(p.Offset).Order("id " + p.Sort).Find(&u).Count(&count); result.Error != nil {
-        return nil, count, result.Error
+    if result := db.Find(&u).Count(&count); result.Error != nil {
+        return count
     }
-    return u, count, nil
+    return count
+}
+
+// ユーザー取得(Paginator)
+func (s Service) PaginateUser(p entity.Pagination) ([]User, error) {
+    db := db.GetDB()
+    var u []User
+    if err := db.Limit(p.Limit).Offset(p.Offset).Order("id " + p.Sort).Find(&u).Error; err != nil {
+        return nil, err
+    }
+    return u, nil
 }
 
 // idでユーザー取得

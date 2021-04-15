@@ -12,7 +12,8 @@ type Controller struct{}
 func (pc Controller) Index(c *gin.Context) {
     var s user.Service
     page := s.GeneratePaginationFromRequest(c)
-    p, count, err := s.PaginateUser(page)
+    p, err := s.PaginateUser(page)
+    count := s.GetUserCount()
 
     if err != nil {
         c.AbortWithStatus(404)
